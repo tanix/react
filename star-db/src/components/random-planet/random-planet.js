@@ -3,60 +3,95 @@ import React, { Component } from 'react'
 import './random-planet.css'
 
 import StarService from '../../services/star-service/star-service'
+import Spinner from '../spinner/spinner'
+import ErrorComponent from '../error/error'
 
 export default class RandomPlanet extends Component {
-
  	starService = new StarService();
 
 	constructor() {
 		super();
 		this.updatePlanet();
+		setInterval(this.updatePlanet, 5000);
 	}
 
 	state = {
-		planet: {}
+		planet: {},
+		loading: true,
+		error: false,
 	} 
 
-	onPlanetLoaded = (planet) => {
-		console.log(planet)
-		this.setState({ planet })
+	onPlanetLoaded = (planet) => {		
+		this.setState({
+			planet,
+			loading: false,
+		})			
 	};
 
-    updatePlanet() {
+	onError = (error) => {	
+		console.log(error);		
+		this.setState({		
+			error: true			
+		})		
+	};
+
+    updatePlanet = () => {		
     	const id = Math.floor(Math.random()*25 + 2);
+    	// const id = 1200;
+
     	this.starService
 	    	.getPlanet(id)
 	    	.then(this.onPlanetLoaded)
-	    	.catch((error) => {
-	    		console.log(error)
-	    	});
+	    	.catch(this.onError);
     }
 
 	render() {
-		const { planet: { id, name, population, rotationPeriod, diameter } } = this.state;
+		const { planet, loading, error } = this.state;
+
+		const spinner = loading ? <Spinner /> : <PlanetView planet={ planet } />;
+		const showComponent = error ?  <ErrorComponent /> : spinner ;
 
 		return (
-	      <div className="random-planet jumbotron rounded">
-	        <img className="planet-image"
-	             src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`}/>
-	        <div>
-	          <h4>{ name }</h4>
-	          <ul className="list-group list-group-flush">
-	            <li className="list-group-item">
-	              <span className="term">Population</span>
-	              <span>{ population }</span>
-	            </li>
-	            <li className="list-group-item">
-	              <span className="term">Rotation Period</span>
-	              <span>{ rotationPeriod }</span>
-	            </li>
-	            <li className="list-group-item">
-	              <span className="term">Diameter</span>
-	              <span>{ diameter }</span>
-	            </li>
-	          </ul>
-	        </div>
-	      </div>
+			<div>
+				<div className='random-planet jumbotron rounded '>
+					{ showComponent }	
+				</div>
+			</div>
 		)
 	}
 }
+
+
+const PlanetView = ({ planet }) => {
+	const { id, name, population, rotationPeriod, diameter } = planet;
+
+	return (
+		<React.Fragment>
+			<img className="planet-image" src={`https://starwars-visualguide.com/assets/img/planets/${id}.jpg`}/>
+			<div>
+				<h4>{ name }</h4>
+				<ul className="list-group list-group-flush">
+					<li className="list-group-item">
+						<span className="term">Population</span>
+						<span>{ population }</span>
+					</li>
+					<li className="list-group-item">
+						<span className="term">Rotation Period</span>
+						<span>{ rotationPeriod }</span>
+					</li>
+					<li className="list-group-item">
+						<span className="term">Diameter</span>
+						<span>{ diameter }</span>
+					</li>
+				</ul>
+			</div>		
+		</React.Fragment>
+	)
+}
+
+
+
+
+
+
+

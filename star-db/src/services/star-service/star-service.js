@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 import './star-service.css'
 
 export default class StarService extends Component {
-	_apiBase = 'https://swapi.co/api/'
+	_apiBase = 'https://swapi.co/api'
 
-	async getResourse (url) {
+	async getResource (url) {
 		const result = await fetch(`${this._apiBase}${url}`);
 
 		if(!result.ok) {
@@ -17,23 +17,33 @@ export default class StarService extends Component {
 	}
 
 	async getAllPeople() {
-		const res = await this.getResourse(`people/`)
-		return res.results
+		const res = await this.getResource(`/people/`);
+		return res.results.map(this._transformPerson);
 	}
 
 	async getPerson(id) {
-		const res = await this.getResourse(`people/${id}/`)
-		return res.results
+		const person = await this.getResource(`/people/${id}/`);
+		return this._transformPerson(person);
 	}
 
-	async getAllPlanet() {
-		const planet = await this.getResourse(`planets/`)	
-		return this.map(this._transformPlanet(planet))
+	async getAllPlanets() {
+		const res = await this.getResource(`/planets/`);
+		return res.results.map(this._transformPlanet);
 	}
 
 	async getPlanet(id) {
-		const planet = await this.getResourse(`planets/${id}/`)			
-		return this._transformPlanet(planet)
+		const planet = await this.getResource(`/planets/${id}/`);
+		return this._transformPlanet(planet);
+	}
+
+	async getAllStarships() {
+		const res = await this.getResource(`/starships/`);
+		return res.results.map(this._transformStarship);
+	}
+
+	async getStarship(id) {
+		const starship = this.getResource(`/starships/${id}/`);
+		return this._transformStarship(starship);
 	}
 
 	_extractId(planet) {
@@ -48,11 +58,40 @@ export default class StarService extends Component {
 			name: planet.name,
 			population: planet.population,
 			rotationPeriod: planet.rotation_period,
-			diameter: planet.diameter,
-			// name: null,
-			// population: null,
-			// rotationPeriod: null,
-			// diameter: null,
+			diameter: planet.diameter
 		}
 	}
+
+  _transformStarship(starship) {
+    return {
+		id: this._extractId(starship),
+		name: starship.name,
+		model: starship.model,
+		manufacturer: starship.manufacturer,
+		costInCredits: starship.costInCredits,
+		length: starship.length,
+		crew: starship.crew,
+		passengers: starship.passengers,
+		cargoCapacity: starship.cargoCapacity
+    }
+  }
+
+  _transformPerson(person) {
+    return {
+		id: this._extractId(person),
+		name: person.name,
+		gender: person.gender,
+		birthYear: person.birthYear,
+		eyeColor: person.eyeColor
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
