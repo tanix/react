@@ -6,11 +6,25 @@ import PersonDetails from '../person-details/person-details'
 import PlanetDetails from '../planet-details/planet-details'
 import RandomPlanet from '../random-planet/random-planet'
 import StarShipDetails from  '../starship-details/starship-details'
+import StarService from '../../services/star-service/star-service'
 
 import './app.css'
 
 export default class App extends Component {
+	state = {
+		personId: null
+	}
+
+	onClickByName = (id) => {	
+		this.setState({
+			personId: id
+		});
+		
+	}
+
 	render() {
+		const { personId } = this.state;
+
 		return (
 			<div>
 				<Header />
@@ -18,10 +32,10 @@ export default class App extends Component {
 
 				<div className= "row mb2">
 					<div className= "col-md-6">
-						<ItemList />
+						<ItemList onClickByName = { this.onClickByName }/>
 					</div>
 					<div className= "col-md-6">
-						<PersonDetails />
+						<PersonDetails getPersonId = { personId }/>
 					</div>
 				</div>
 			</div>

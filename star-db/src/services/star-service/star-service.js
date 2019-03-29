@@ -48,11 +48,16 @@ export default class StarService extends Component {
 
 	_extractId(planet) {
 		const idRegExp = /([0-9]*)\/$/;
-		const id = planet.url.match(idRegExp)[1]	
+		let id = planet.url.match(idRegExp)[1]	
+
+		// if(!id.length) {
+		// 	id = Math.floor(Math.random())
+		// }
+
 		return id
 	}
 
-	_transformPlanet(planet) {
+	_transformPlanet = (planet) => {
 		return {
 			id: this._extractId(planet),
 			name: planet.name,
@@ -62,7 +67,7 @@ export default class StarService extends Component {
 		}
 	}
 
-  _transformStarship(starship) {
+  _transformStarship = (starship) => {
     return {
 		id: this._extractId(starship),
 		name: starship.name,
@@ -76,7 +81,7 @@ export default class StarService extends Component {
     }
   }
 
-  _transformPerson(person) {
+  _transformPerson = (person) => {
     return {
 		id: this._extractId(person),
 		name: person.name,

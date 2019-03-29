@@ -3,7 +3,17 @@ import React, { Component } from 'react'
 import './person-details.css'
 
 export default class PersonDetails extends Component {
-	render() {
+	state = {
+		name: null,
+		gender: null,
+		birth_year: null,
+		eye_color: null
+	}
+
+	render() {	
+		const personId = this.props.getPersonId;
+		console.log(personId);
+
 		return (
 	      <div className="person-details card">
 	        <img className="person-image"

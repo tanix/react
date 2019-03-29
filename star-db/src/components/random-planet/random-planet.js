@@ -2,17 +2,17 @@ import React, { Component } from 'react'
 
 import './random-planet.css'
 
-import StarService from '../../services/star-service/star-service'
 import Spinner from '../spinner/spinner'
 import ErrorComponent from '../error/error'
+import StarService from '../../services/star-service/star-service'
 
 export default class RandomPlanet extends Component {
  	starService = new StarService();
 
 	constructor() {
 		super();
+		//this.componentDidMount();
 		this.updatePlanet();
-		setInterval(this.updatePlanet, 5000);
 	}
 
 	state = {
@@ -20,6 +20,14 @@ export default class RandomPlanet extends Component {
 		loading: true,
 		error: false,
 	} 
+
+	// componentDidMount = () => {	
+	// 	console.log('componentDidMount()');
+	// }
+
+	// componentWillUnmount = () => {	
+	// 	console.log('componentWillUnmount()');
+	// }
 
 	onPlanetLoaded = (planet) => {		
 		this.setState({
@@ -36,8 +44,7 @@ export default class RandomPlanet extends Component {
 	};
 
     updatePlanet = () => {		
-    	const id = Math.floor(Math.random()*25 + 2);
-    	// const id = 1200;
+    	const id = Math.floor(Math.random()*25 + 2);  
 
     	this.starService
 	    	.getPlanet(id)
