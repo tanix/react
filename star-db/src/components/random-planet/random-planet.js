@@ -9,25 +9,20 @@ import StarService from '../../services/star-service/star-service'
 export default class RandomPlanet extends Component {
  	starService = new StarService();
 
-	constructor() {
-		super();
-		//this.componentDidMount();
-		this.updatePlanet();
-	}
-
 	state = {
 		planet: {},
 		loading: true,
 		error: false,
 	} 
 
-	// componentDidMount = () => {	
-	// 	console.log('componentDidMount()');
-	// }
+	componentDidMount() {	
+		this.updatePlanet();
+		this.interval = setInterval(this.updatePlanet, 5000)		
+	}
 
-	// componentWillUnmount = () => {	
-	// 	console.log('componentWillUnmount()');
-	// }
+	componentWillUnmount () {	
+		clearInterval(this.interval);
+	}
 
 	onPlanetLoaded = (planet) => {		
 		this.setState({
