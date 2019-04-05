@@ -1,12 +1,10 @@
 import React, { Component } from 'react'
 
-import StarService from '../../services/star-service/star-service';
 import Spinner from '../spinner/spinner';
 
 import './item-list.css'
 
 export default class ItemList extends Component {
-	starService = new StarService();
 
 	state = {
 		peopleList: {}
@@ -14,22 +12,25 @@ export default class ItemList extends Component {
 
 	constructor() {
 		super();
-		this.componentDidMount();
 	}
 
-	componentDidMount() {		
-		this.starService
-		.getAllPeople()
+	componentDidMount() {	
+		const { getData } = this.props;
+
+		getData()
 		.then((peopleList) => {
 			this.setState({peopleList})
 		});		
 	}
 
-	getPeopleList = (peopleList) => {
+	getPeopleList = (peopleList) => {		
 		if(peopleList.length) {
-			return peopleList.map(({id, name}) => {
+			return peopleList.map((item) => {
+				const { id } = item;
+				const label = this.props.children(item)
+
 				return(	<li className="list-group-item" key={id} 
-					onClick={(e) => this.props.onClickByName(id, e)} >{name}</li>)						
+					onClick={(e) => this.props.onClickByName(id, e)} >{label}</li>)						
 			});
 		}
 	}
